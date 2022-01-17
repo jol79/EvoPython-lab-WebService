@@ -1,0 +1,66 @@
+{% extends "main.html" %}
+
+{% block content %}
+    <h1>
+        Home page
+    </h1>
+    <form action="" method="POST" id="createUserForm">
+        <div class="create_user_form">
+            <!-- {% csrf_token %} -->
+            <label for="create_user_form">Create new user</label>
+            <input type="text" name="username" id="username" placeholder="Username">
+            <input type="text" name="email" id="email" placeholder="Email">
+            <button class="btn">Create</button>
+        </div>
+    </form>
+
+    <script>        
+        let username = document.getElementById("username");
+        let email = document.getElementById("email");
+        let form = document.getElementById("createUserForm");
+
+        form.addEventListener('submit', e => {
+            e.preventDefault(); // disable auto reload after form submit
+
+            // "csrfmiddlewaretoken": '{{ csrf_token }}',
+            let postData = `{
+                "username": ${username.value},
+                "email ": ${email.value},
+            }`;
+
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'createNewUser' %}",
+                data: {
+                    'username': username.value,
+                    'email': email.value
+                },
+                success: function(response){
+                    console.log("RESPONSE SUCCESS: ", response);
+                },
+                error: function(error){
+                    console.log("RESPONSE ERROR: ", error);
+                }
+            });
+        });
+
+        // const createUser = function() {
+        //     console.log("INSIDE FUNCTION");
+        //     let xhr = new XMLHttpRequest();
+        //     xhr.open("POST", "{% url 'createNewUser' %}");
+        //     console.log("URL DESTINATION: ", "{% url 'createNewUser' %}");
+
+        //     xhr.setRequestHeader("Accept", "application/json");
+        //     xhr.setRequestHeader("Content-Type", "application/json");
+
+        //     let data = `{
+        //         "username": ${username.value},
+        //         "email ": ${email.value},
+        //         "csrfmiddlewaretoken": '{{ csrf_token }}',
+        //     }`;
+
+        //     console.log("REQUEST: ", data);
+        //     xhr.send(data);
+        // }
+    </script>
+{% endblock content %}
