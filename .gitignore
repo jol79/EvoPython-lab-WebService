@@ -1,3 +1,4 @@
 /env
 credentials.py
 *__pycache__
+credentials_database.py
