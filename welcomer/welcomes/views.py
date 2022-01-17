@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from pymongo import MongoClient
+from .credentials_database import *
 
 
 def main(request):
@@ -21,8 +23,29 @@ def createNewUser(request):
         username = request.POST['username']
         email = request.POST['email']
 
-        if username and email:
+        if not username or not email:
+            return JsonResponse({'status': f'You have just submitted the wrong data: username="{username}", email="{email}"'})
+
+        client = MongoClient(CONNECTION_STRING)
+        database = client[DATABASE]
+        collection = database[COLLECTION]
+
+        if collection.find_one(filter={'email': email, 'username': username}):
+            # return data about the user
             response = {
-                'msg': f'Given username: {username}, email: {email}'
+                'first_time': False,
+                'username': username,
+                'email': email
             }
             return JsonResponse(response)
+        collection.insert_one({
+            'username': username,
+            'email': email
+        })
+
+        response = {
+            'first_time': True,
+            'username': username,
+            'email': email
+        }
+        return JsonResponse(response)
