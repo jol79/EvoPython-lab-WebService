@@ -13,6 +13,7 @@
             <button class="btn">Create</button>
         </div>
     </form>
+    <div id="user_data"></div>
 
     <script>        
         let username = document.getElementById("username");
@@ -20,6 +21,11 @@
         let form = document.getElementById("createUserForm");
 
         form.addEventListener('submit', e => {
+            if (username.value === "" || email.value === ""){
+                alert("Both email and username fields need to be provided!");
+                return;
+            }
+
             e.preventDefault(); // disable auto reload after form submit
 
             // "csrfmiddlewaretoken": '{{ csrf_token }}',
@@ -36,6 +42,16 @@
                     'email': email.value
                 },
                 success: function(response){
+                    let form = document.getElementById("createUserForm");
+                    let root = document.getElementById("user_data");
+                    form.style.visibility = "hidden";
+
+                    if (response.first_time === true){
+                        root.innerHTML += `<p>Welcome for the first time ${response.username}</p>`;
+                    } else if (response.first_time === false){
+                        root.innerHTML += `<p>I have already seen you here ${response.username}, hellooooo!<p>`;
+                    }
+
                     console.log("RESPONSE SUCCESS: ", response);
                 },
                 error: function(error){
@@ -43,24 +59,5 @@
                 }
             });
         });
-
-        // const createUser = function() {
-        //     console.log("INSIDE FUNCTION");
-        //     let xhr = new XMLHttpRequest();
-        //     xhr.open("POST", "{% url 'createNewUser' %}");
-        //     console.log("URL DESTINATION: ", "{% url 'createNewUser' %}");
-
-        //     xhr.setRequestHeader("Accept", "application/json");
-        //     xhr.setRequestHeader("Content-Type", "application/json");
-
-        //     let data = `{
-        //         "username": ${username.value},
-        //         "email ": ${email.value},
-        //         "csrfmiddlewaretoken": '{{ csrf_token }}',
-        //     }`;
-
-        //     console.log("REQUEST: ", data);
-        //     xhr.send(data);
-        // }
     </script>
 {% endblock content %}

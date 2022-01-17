@@ -9,7 +9,25 @@ def main(request):
     return render(request, "welcomes/home.html")
 
 def users(request):
-    return render(request, "users/users.html")
+    """Returns all users from the database"""
+
+    try:
+        client = MongoClient(CONNECTION_STRING)
+        database = client[DATABASE]
+        collection = database[COLLECTION]
+    except:
+        response = {
+            'users': None,
+            'error': "Unable to connect to the database!"
+        }
+        return JsonResponse(response)
+
+    responseData = {
+        "users": [user for user in collection.find()]
+    }
+    print("Users Data: ", responseData)
+
+    return render(request, "users/users.html", responseData)
 
 @csrf_exempt 
 def createNewUser(request):
@@ -26,9 +44,18 @@ def createNewUser(request):
         if not username or not email:
             return JsonResponse({'status': f'You have just submitted the wrong data: username="{username}", email="{email}"'})
 
-        client = MongoClient(CONNECTION_STRING)
-        database = client[DATABASE]
-        collection = database[COLLECTION]
+        try:
+            client = MongoClient(CONNECTION_STRING)
+            database = client[DATABASE]
+            collection = database[COLLECTION]
+        except:
+            response = {
+                'first_time': None,
+                'username': None,
+                'email': None,
+                'error': "Unable to connect to the database!"
+            }
+            return JsonResponse(response)
 
         if collection.find_one(filter={'email': email, 'username': username}):
             # return data about the user

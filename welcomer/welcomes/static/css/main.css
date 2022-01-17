@@ -32,6 +32,20 @@ a{
     margin-top: 1%;
     padding: 4px 48px;
 }
-.btn:hover{
+.btnhover{
     cursor: pointer;
+}
+.user{
+    display: flex;
+    flex-direction: row;
+    justify-items: center;
+    font-size: 16px;
+    font-weight: 400;
+    justify-content: center;
+}
+.email{
+    margin-left: 10px;
+}
+#users_data p{
+    text-align: center;
 }
