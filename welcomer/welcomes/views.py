@@ -25,7 +25,6 @@ def users(request):
     responseData = {
         "users": [user for user in collection.find()]
     }
-    print("Users Data: ", responseData)
 
     return render(request, "users/users.html", responseData)
 
