@@ -1,2 +1,5 @@
 /env
 credentials.py
+welcomer/welcomer/__pycache__
+welcomer/welcomes/__pycache__
+credentials_database.py
