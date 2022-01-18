@@ -1,1 +1,1 @@
-web: gunicorn welcomer.wsgi --log-file -
+web: gunicorn welcomer.welcomer.wsgi --log-file -
