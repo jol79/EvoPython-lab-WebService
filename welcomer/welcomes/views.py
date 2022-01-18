@@ -2,7 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from pymongo import MongoClient
-from .credentials_database import *
+# from .credentials_database import *
+import os
 
 
 def main(request):
@@ -12,9 +13,10 @@ def users(request):
     """Returns all users from the database"""
 
     try:
+        CONNECTION_STRING = f"mongodb+srv://{os.environ.get('DB_USERNAME')}:{os.environ.get('DB_PASSWORD')}@responses.awbv0.mongodb.net/{os.environ.get('DB_NAME')}?retryWrites=true&w=majority"
         client = MongoClient(CONNECTION_STRING)
-        database = client[DATABASE]
-        collection = database[COLLECTION]
+        database = client[os.environ.get('DB_NAME')]
+        collection = database[os.environ.get('DB_COLLECTION')]
     except:
         response = {
             'users': None,
@@ -44,9 +46,10 @@ def createNewUser(request):
             return JsonResponse({'status': f'You have just submitted the wrong data: username="{username}", email="{email}"'})
 
         try:
+            CONNECTION_STRING = f"mongodb+srv://{os.environ.get('DB_USERNAME')}:{os.environ.get('DB_PASSWORD')}@responses.awbv0.mongodb.net/{os.environ.get('DB_NAME')}?retryWrites=true&w=majority"
             client = MongoClient(CONNECTION_STRING)
-            database = client[DATABASE]
-            collection = database[COLLECTION]
+            database = client[os.environ.get('DB_NAME')]
+            collection = database[os.environ.get('DB_COLLECTION')]
         except:
             response = {
                 'first_time': None,
