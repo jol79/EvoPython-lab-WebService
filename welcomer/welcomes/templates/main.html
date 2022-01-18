@@ -14,13 +14,20 @@
     <!-- fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;800&display=swap" rel="stylesheet">
 
+    <!-- js -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
     <title>Welcomer</title>
 </head>
 <body>
     <section class="nav-bar">
         <nav>
-            <a href="#">Users list</a>
+            <a href="/">Home</a>
+        </nav>
+        <nav>
+            <a href="users">Users list</a>
         </nav>
     </section>
+    {% block content %}{% endblock content %}
 </body>
 </html>

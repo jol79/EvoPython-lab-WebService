@@ -1,0 +1,20 @@
+{% extends "main.html" %}
+
+{% block content %}
+    <h1>
+        Users page
+    </h1>
+    <div id="users_data">
+        <p>All users on the website:</p>
+        {% for user in users %}
+            <div class="user">
+                <p class="username">
+                    Username: {{ user.username }},
+                </p>
+                <p class="email">
+                    Email: {{ user.email }}
+                </p>
+            </div>         
+        {% endfor %}
+    </div>
+{% endblock content %}

@@ -1,0 +1,63 @@
+{% extends "main.html" %}
+
+{% block content %}
+    <h1>
+        Home page
+    </h1>
+    <form action="" method="POST" id="createUserForm">
+        <div class="create_user_form">
+            <!-- {% csrf_token %} -->
+            <label for="create_user_form">Create new user</label>
+            <input type="text" name="username" id="username" placeholder="Username">
+            <input type="text" name="email" id="email" placeholder="Email">
+            <button class="btn">Create</button>
+        </div>
+    </form>
+    <div id="user_data"></div>
+
+    <script>        
+        let username = document.getElementById("username");
+        let email = document.getElementById("email");
+        let form = document.getElementById("createUserForm");
+
+        form.addEventListener('submit', e => {
+            if (username.value === "" || email.value === ""){
+                alert("Both email and username fields need to be provided!");
+                return;
+            }
+
+            e.preventDefault(); // disable auto reload after form submit
+
+            // "csrfmiddlewaretoken": '{{ csrf_token }}',
+            let postData = `{
+                "username": ${username.value},
+                "email ": ${email.value},
+            }`;
+
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'createNewUser' %}",
+                data: {
+                    'username': username.value,
+                    'email': email.value
+                },
+                success: function(response){
+                    let form = document.getElementById("createUserForm");
+                    let root = document.getElementById("user_data");
+                    form.style.visibility = "hidden";
+
+                    if (response.first_time === true){
+                        root.innerHTML += `<p>Welcome for the first time ${response.username}</p>`;
+                    } else if (response.first_time === false){
+                        root.innerHTML += `<p>I have already seen you here ${response.username}, hellooooo!<p>`;
+                    }
+
+                    console.log("RESPONSE SUCCESS: ", response);
+                },
+                error: function(error){
+                    console.log("RESPONSE ERROR: ", error);
+                }
+            });
+        });
+    </script>
+{% endblock content %}
