@@ -31,7 +31,7 @@ def users(request):
     return render(request, "users/users.html", responseData)
 
 @csrf_exempt 
-def createNewUser(request):
+def create_new_user(request):
     """
     Verifies that user doesn't exist in the db
     and creates the user, otherwise returns data 

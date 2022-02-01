@@ -36,7 +36,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: "{% url 'createNewUser' %}",
+                url: "{% url 'create_new_user' %}",
                 data: {
                     'username': username.value,
                     'email': email.value
