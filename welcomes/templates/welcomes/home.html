@@ -21,6 +21,9 @@
         let form = document.getElementById("createUserForm");
 
         form.addEventListener('submit', e => {
+
+            console.log("Clicked!");
+            
             if (username.value === "" || email.value === ""){
                 alert("Both email and username fields need to be provided!");
                 return;
@@ -28,36 +31,74 @@
 
             e.preventDefault(); // disable auto reload after form submit
 
-            // "csrfmiddlewaretoken": '{{ csrf_token }}',
-            let postData = `{
-                "username": ${username.value},
-                "email ": ${email.value},
-            }`;
+            console.log(`Username: ${username.value}, value: ${email.value}`);
 
-            $.ajax({
-                type: 'POST',
-                url: "{% url 'create_new_user' %}",
-                data: {
-                    'username': username.value,
-                    'email': email.value
-                },
-                success: function(response){
+            // "csrfmiddlewaretoken": '{{ csrf_token }}',
+            let postData = {
+                username: username.value,
+                email: email.value,
+            };
+
+            fetch("{% url 'create_new_user' %}", {
+                method: 'POST',
+                body: JSON.stringify(postData)
+            })
+                .then(response => response.json())
+                .then(data => {
                     let form = document.getElementById("createUserForm");
                     let root = document.getElementById("user_data");
                     form.style.visibility = "hidden";
 
-                    if (response.first_time === true){
-                        root.innerHTML += `<p>Welcome for the first time ${response.username}</p>`;
-                    } else if (response.first_time === false){
-                        root.innerHTML += `<p>I have already seen you here ${response.username}, hellooooo!<p>`;
+                    if (data.first_time === true){
+                        root.innerHTML += `<p>Welcome for the first time ${data.username}</p>`;
+                    } else if (data.first_time === false){
+                        root.innerHTML += `<p>I have already seen you here ${data.username}, hellooooo!<p>`;
                     }
+                })
+                .catch(err => console.error(err));
 
-                    console.log("RESPONSE SUCCESS: ", response);
-                },
-                error: function(error){
-                    console.log("RESPONSE ERROR: ", error);
-                }
-            });
+
+                // .then(success => {
+                //     console.log(`Received response data: ${response}`);
+
+                //     let form = document.getElementById("createUserForm");
+                //     let root = document.getElementById("user_data");
+                //     form.style.visibility = "hidden";
+
+                //     if (response.first_time === true){
+                //         root.innerHTML += `<p>Welcome for the first time ${response.username}</p>`;
+                //     } else if (response.first_time === false){
+                //         root.innerHTML += `<p>I have already seen you here ${response.username}, hellooooo!<p>`;
+                //     }
+                // })
+                // .catch(err => console.error(err));
+
+
+
+            // $.ajax({
+            //     type: 'POST',
+            //     url: "{% url 'create_new_user' %}",
+            //     data: {
+            //         'username': username.value,
+            //         'email': email.value
+            //     },
+            //     success: function(response){
+            //         let form = document.getElementById("createUserForm");
+            //         let root = document.getElementById("user_data");
+            //         form.style.visibility = "hidden";
+
+            //         if (response.first_time === true){
+            //             root.innerHTML += `<p>Welcome for the first time ${response.username}</p>`;
+            //         } else if (response.first_time === false){
+            //             root.innerHTML += `<p>I have already seen you here ${response.username}, hellooooo!<p>`;
+            //         }
+
+            //         console.log("RESPONSE SUCCESS: ", response);
+            //     },
+            //     error: function(error){
+            //         console.log("RESPONSE ERROR: ", error);
+            //     }
+            // });
         });
     </script>
 {% endblock content %}

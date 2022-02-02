@@ -3,7 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from pymongo import MongoClient
 # from .credentials_database import *
-import os
+import os, json
 
 
 def main(request):
@@ -38,9 +38,14 @@ def create_new_user(request):
     associated with a given email/username
     """
 
+    print(f"RECEIVED REQUEST: {request.body}")
+
     if request.method == 'POST':
-        username = request.POST['username']
-        email = request.POST['email']
+        received_data = json.loads(request.body.decode('utf-8'))
+        username = received_data['username']
+        email = received_data['email']
+
+        print(f"RECEIVED Username: {username}, email: {email}")
 
         if not username or not email:
             return JsonResponse({'status': f'You have just submitted the wrong data: username="{username}", email="{email}"'})
